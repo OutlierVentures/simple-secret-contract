@@ -1,5 +1,5 @@
 [package]
-name = "mysimplecounter"
+name = "addnumbersquared"
 version = "0.1.0"
 authors = ["Aron van Ammers <aron@outlierventures.io>"]
 edition = "2018"

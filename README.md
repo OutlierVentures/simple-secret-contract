@@ -1,65 +1,39 @@
-# Secret Contracts Starter Pack
+# A very simple Secret Contract
 
-This is a template to build secret contracts in Rust to run in
-[Secret Network](https://github.com/enigmampc/SecretNetwork).
-To understand the framework better, please read the overview in the
-[cosmwasm repo](https://github.com/CosmWasm/cosmwasm/blob/master/README.md),
-and dig into the [cosmwasm docs](https://www.cosmwasm.com).
-This assumes you understand the theory and just want to get coding.
+This is a very simple Secret Contract which can be deployed on the [Secret Network](https://github.com/enigmampc/SecretNetwork), created as part of the [Secret Games incentivised testnet phase 1](https://blog.scrt.network/secret-games-update-testnet-phase-1/). It was built using the [Secret Contracts Starter Pack](https://github.com/enigmampc/secret-template/). For the basics on how to build, test, deploy and interact with secret contracts, please start there. 
 
-## Creating a new repo from template
+The example calls below assume the default situation on the local containerised development environment:
+- a key named `a`
+- keyring-backend `test`
 
-Assuming you have a recent version of rust and cargo installed (via [rustup](https://rustup.rs/)),
-then the following should get you a new repo to start a contract:
+# Transactional functions
 
-First, install
-[cargo-generate](https://github.com/ashleygwilliams/cargo-generate).
-Unless you did that before, run this line now:
+## add_squared: Add the square of a number to a running total
 
-```sh
-cargo install cargo-generate --features vendored-openssl
+Add the square of a the passed number to a running total.
+
+Example call:
+
+```
+secretcli tx compute execute $CONTRACT '{"add_squared": {"amount": 5}}' --from a --keyring-backend test
 ```
 
-Now, use it to create your new contract.
-Go to the folder in which you want to place it and run:
+## reset: Reset the running total
 
-**0.9 (latest)**
+Reset the running total to an arbitrary number.
 
-```sh
-cargo generate --git https://github.com/enigmampc/secret-template.git --name YOUR_NAME_HERE
+Example call:
+
+```
+secretcli tx compute execute $CONTRACT '{"reset": {"total": 0}}' --from a --keyring-backend test
 ```
 
-You will now have a new folder called `YOUR_NAME_HERE` (I hope you changed that to something else)
-containing a simple working contract and build system that you can customize.
+# Queryable fields
 
-## Create a Repo
+## get_total
 
-After generating, you have a initialized local git repo, but no commits, and no remote.
-Go to a server (eg. github) and create a new upstream repo (called `YOUR-GIT-URL` below).
-Then run the following:
+Get the current running total.
 
-```sh
-# this is needed to create a valid Cargo.lock file (see below)
-cargo check
-git checkout -b master # in case you generate from non-master
-git add .
-git commit -m 'Initial Commit'
-git remote add origin YOUR-GIT-URL
-git push -u origin master
 ```
-
-## Using your project
-
-Once you have your custom repo, you should check out [Developing](./Developing.md) to explain
-more on how to run tests and develop code. Or go through the
-[online tutorial](https://www.cosmwasm.com/docs/getting-started/intro) to get a better feel
-of how to develop.
-
-[Publishing](./Publishing.md) contains useful information on how to publish your contract
-to the world, once you are ready to deploy it on a running blockchain. And
-[Importing](./Importing.md) contains information about pulling in other contracts or crates
-that have been published.
-
-Please replace this README file with information about your specific project. You can keep
-the `Developing.md` and `Publishing.md` files as useful referenced, but please set some
-proper description in the README.
+secretcli query compute contract-state smart $CONTRACT '{"get_total": {}}'
+```
